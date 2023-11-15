@@ -5,7 +5,8 @@ import { addHours } from 'date-fns'
 
 import { getMessagesEs, localizer } from '../../helpers'
 
-import { Navbar } from ".."
+import { CalendarEvent, Navbar } from ".."
+
 import { Event } from '../interfaces'
 
 const events = [{
@@ -21,10 +22,8 @@ const events = [{
 }]
 
 export const CalendarPage = () => {
-  const eventStyleGetter: EventPropGetter<Event> = (
-    event, start, end, isSelected
-  ) => {
-    console.log({ event, start, end, isSelected })
+  const eventStyleGetter: EventPropGetter<Event> = (event) => {
+    console.log(event);
 
     const style = {
       backgroundColor: '#347cf7',
@@ -52,6 +51,9 @@ export const CalendarPage = () => {
         style={{ height: 'calc(100vh - 56px)' }}
         messages={getMessagesEs()}
         eventPropGetter={eventStyleGetter}
+        components={{
+          event: CalendarEvent
+        }}
       />
     </>
   )
