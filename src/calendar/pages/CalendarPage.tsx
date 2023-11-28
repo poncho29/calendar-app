@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Calendar, EventPropGetter, View } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
@@ -5,10 +6,9 @@ import { addHours } from 'date-fns'
 
 import { getMessagesEs, isValidView, localizer } from '../../helpers'
 
-import { CalendarEvent, Navbar } from ".."
+import { CalendarEvent, CalendarModal, Navbar } from ".."
 
 import { Event } from '../interfaces'
-import { useEffect, useState } from 'react'
 
 const events: Event[] = [{
   title: 'Cumpleaños',
@@ -83,6 +83,8 @@ export const CalendarPage = () => {
           event: CalendarEvent
         }}
       />
+
+      <CalendarModal />
     </>
   )
 }
