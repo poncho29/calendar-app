@@ -1,15 +1,16 @@
-import { Calendar, EventPropGetter } from 'react-big-calendar'
+import { Calendar, EventPropGetter, View } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import { addHours } from 'date-fns'
 
-import { getMessagesEs, localizer } from '../../helpers'
+import { getMessagesEs, isValidView, localizer } from '../../helpers'
 
 import { CalendarEvent, Navbar } from ".."
 
 import { Event } from '../interfaces'
+import { useEffect, useState } from 'react'
 
-const events = [{
+const events: Event[] = [{
   title: 'Cumpleaños',
   notas: 'Comprar el pastel',
   start: new Date(),
@@ -22,8 +23,18 @@ const events = [{
 }]
 
 export const CalendarPage = () => {
-  const eventStyleGetter: EventPropGetter<Event> = (event) => {
-    console.log(event);
+  const [lastView, setLastView] = useState<View>('week');
+
+  useEffect(() => {
+    const storage = localStorage.getItem('lastView');
+    if (storage && isValidView(storage)) {
+      setLastView(storage);
+    }
+  }, []);
+
+
+  const eventStyleGetter: EventPropGetter<Event> = () => {
+    // console.log(event);
 
     const style = {
       backgroundColor: '#347cf7',
@@ -38,6 +49,19 @@ export const CalendarPage = () => {
     }
   }
 
+  const onDoubleClick = (event: Event) => {
+    console.log({ doubleClick: event });
+  }
+
+  const onSelect = (event: Event) => {
+    console.log({ click: event });
+  }
+
+  const onViewChanged = (view: View) => {
+    localStorage.setItem('lastView', view);
+    setLastView(view);
+  }
+
   return (
     <>
       <Navbar />
@@ -46,11 +70,15 @@ export const CalendarPage = () => {
         culture='es'
         startAccessor="start"
         endAccessor="end"
+        defaultView={lastView}
         events={events}
         localizer={localizer}
         style={{ height: 'calc(100vh - 56px)' }}
         messages={getMessagesEs()}
         eventPropGetter={eventStyleGetter}
+        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelect}
+        onView={onViewChanged}
         components={{
           event: CalendarEvent
         }}

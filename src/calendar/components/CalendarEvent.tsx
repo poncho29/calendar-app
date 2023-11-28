@@ -1,8 +1,16 @@
 
-// import { Event } from '../interfaces'
+import { Event } from '../interfaces'
 
-export const CalendarEvent = () => {
+import { EventProps } from "react-big-calendar"
+
+
+export const CalendarEvent = (props: EventProps<Event>) => {
+  const { title, user } = props.event;
+
   return (
-    <div>CalendarEvent</div>
+    <>
+      <strong>{title}</strong>
+      <span> - {user.name}</span>
+    </>
   )
 }
