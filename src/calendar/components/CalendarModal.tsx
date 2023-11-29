@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import Modal from 'react-modal'
 
@@ -11,7 +11,9 @@ import es from 'date-fns/locale/es';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useUiStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
+
+import { Event } from '../interfaces';
 
 registerLocale('es', es);
 
@@ -30,13 +32,14 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
+  const { activeEvent } = useCalendarStore();
   const { isDateModalOpen, closeDateModal } = useUiStore();
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<Event>({
     title: '',
-    notes: '',
+    notas: '',
     start: new Date(),
     end: addHours(new Date(), 2)
   });
@@ -45,7 +48,13 @@ export const CalendarModal = () => {
     if (!formSubmitted) return '';
 
     return (formValues.title.length > 0) ? '' : 'is-invalid';
-  }, [formValues.title, formSubmitted])
+  }, [formValues.title, formSubmitted]);
+
+  useEffect(() => {
+    if (activeEvent !== null) {
+      setFormValues({ ...activeEvent })
+    }
+  }, [activeEvent]);
 
   const onInputChange = ({ target }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormValues({
@@ -134,7 +143,7 @@ export const CalendarModal = () => {
             name="notes"
             placeholder="Notas"
             className="form-control"
-            value={formValues.notes}
+            value={formValues.notas}
             onChange={onInputChange}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">Información adicional</small>
