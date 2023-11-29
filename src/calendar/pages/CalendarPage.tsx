@@ -8,6 +8,8 @@ import { getMessagesEs, isValidView, localizer } from '../../helpers'
 
 import { CalendarEvent, CalendarModal, Navbar } from ".."
 
+import { useUiStore } from '../../hooks'
+
 import { Event } from '../interfaces'
 
 const events: Event[] = [{
@@ -23,6 +25,8 @@ const events: Event[] = [{
 }]
 
 export const CalendarPage = () => {
+  const { openDateModal } = useUiStore();
+
   const [lastView, setLastView] = useState<View>('week');
 
   useEffect(() => {
@@ -51,6 +55,7 @@ export const CalendarPage = () => {
 
   const onDoubleClick = (event: Event) => {
     console.log({ doubleClick: event });
+    openDateModal();
   }
 
   const onSelect = (event: Event) => {
