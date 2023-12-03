@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from "."
 
-import { onAddNewEvent, onSetActiveEvent } from "../store";
+import { onAddNewEvent, onSetActiveEvent, onUpdateEvent } from "../store";
 
 import { Event } from "../calendar/interfaces";
 
 export const useCalendarStore = () => {
-  const { events, activeEvent } = useAppSelector((state) => state.calendar);
   const dispatch = useAppDispatch();
+  const { events, activeEvent } = useAppSelector((state) => state.calendar);
 
   const setActiveEvent = (event: Event) => {
     dispatch(onSetActiveEvent(event))
@@ -16,7 +16,7 @@ export const useCalendarStore = () => {
     // TODO: Llegar al backend
 
     if(event._id) {
-      // Pending
+      dispatch(onUpdateEvent({ ...event }));
     } else {
       dispatch(onAddNewEvent({ ...event, _id: new Date().getTime().toString() }));
     }
@@ -29,6 +29,6 @@ export const useCalendarStore = () => {
 
     // Methods
     setActiveEvent,
-    startSavingEvent
+    startSavingEvent,
   }
 };
