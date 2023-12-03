@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "."
 
-import { onAddNewEvent, onSetActiveEvent, onUpdateEvent } from "../store";
+import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store";
 
 import { Event } from "../calendar/interfaces";
 
@@ -22,13 +22,21 @@ export const useCalendarStore = () => {
     }
   }
 
+  const startDeletingEvent = () => {
+    // Llegar al backend
+
+    dispatch(onDeleteEvent());
+  }
+
   return {
     // Properties
     events,
     activeEvent,
+    hasEventSelected: !!activeEvent,
 
     // Methods
     setActiveEvent,
     startSavingEvent,
+    startDeletingEvent
   }
 };
