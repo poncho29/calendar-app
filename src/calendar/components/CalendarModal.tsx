@@ -32,8 +32,8 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
-  const { activeEvent } = useCalendarStore();
   const { isDateModalOpen, closeDateModal } = useUiStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -70,7 +70,7 @@ export const CalendarModal = () => {
     });
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormSubmitted(true);
 
@@ -83,6 +83,10 @@ export const CalendarModal = () => {
     if (formValues.title.length <= 0) return;
 
     console.log(formValues);
+
+    await startSavingEvent(formValues);
+    closeDateModal();
+    setFormSubmitted(false);
   };
 
   return (
@@ -113,8 +117,10 @@ export const CalendarModal = () => {
         <div className="form-group mb-2">
           <label className='w-100'>Fecha y hora fin</label>
           <DatePicker
+            showTimeSelect
             locale='es'
             dateFormat='Pp'
+            timeCaption='Hora'
             className='form-control'
             selected={formValues.end}
             minDate={formValues.start}
@@ -140,7 +146,7 @@ export const CalendarModal = () => {
         <div className="form-group mb-2">
           <textarea
             rows={5}
-            name="notes"
+            name="notas"
             placeholder="Notas"
             className="form-control"
             value={formValues.notas}
