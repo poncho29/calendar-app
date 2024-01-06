@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import './loginPage.css';
+import { useAuthStore } from '../../hooks';
 
 const initialLogin = {
   email: '',
@@ -16,6 +17,8 @@ const initialRegister = {
 }
 
 export const LoginPage = () => {
+  const { startLogin } = useAuthStore();
+
   const formikLogin = useFormik({
     initialValues: initialLogin,
     validationSchema: Yup.object().shape({
@@ -23,11 +26,11 @@ export const LoginPage = () => {
         .email('Correo Invalido')
         .required('El correo es obligatorio'),
       password: Yup.string()
-        .min(4, 'La contaseña debe tener minimo 4 caracteres')
+        .min(6, 'La contaseña debe tener minimo 4 caracteres')
         .required('La contraseña es obligatorio'),
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      startLogin(values)
     },
   });
 
@@ -39,11 +42,11 @@ export const LoginPage = () => {
         .email('Correo Invalido')
         .required('El correo es obligatorio'),
       password: Yup.string()
-        .min(4, 'La contaseña debe tener minimo 4 caracteres')
+        .min(6, 'La contaseña debe tener minimo 4 caracteres')
         .required('La contraseña es obligatorio'),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), undefined], 'Las contraseñas deben coincidir')
-        .min(4, 'La confirmación de contaseña debe tener minimo 4 caracteres')
+        .min(6, 'La confirmación de contaseña debe tener minimo 4 caracteres')
         .required('La confirmación de contraseña es obligatorio'),
     }),
     onSubmit: values => {
