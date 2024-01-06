@@ -58,3 +58,10 @@
   font-weight: 600;
   text-decoration: none;
 }
+
+.error-input {
+  color: red;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: .8rem;
+}
