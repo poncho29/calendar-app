@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Swal from 'sweetalert2';
+
+import { useAuthStore } from '../../hooks';
 
 import './loginPage.css';
-import { useAuthStore } from '../../hooks';
 
 const initialLogin = {
   email: '',
@@ -17,7 +20,13 @@ const initialRegister = {
 }
 
 export const LoginPage = () => {
-  const { startLogin } = useAuthStore();
+  const { errorMessage, startLogin } = useAuthStore();
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire('Error en la autenticación', errorMessage, 'error');
+    }
+  }, [errorMessage]);
 
   const formikLogin = useFormik({
     initialValues: initialLogin,
