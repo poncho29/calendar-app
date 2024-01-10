@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { AuthState, AuthStatus } from '../../interfaces';
+import { AuthState, AuthStatus, User } from '../../interfaces';
 
-const InitialUser: Record<string, unknown> = {};
+const InitialUser: User | null = null;
 
 const initialState: AuthState = {
-  status: AuthStatus.checking,
+  status: AuthStatus.notAuthenticated,
   user: InitialUser,
   errorMessage: undefined,
 }
@@ -14,17 +14,25 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    checking: (state) => {
+    onChecking: (state) => {
       state.status = AuthStatus.checking;
-      state.user = {};
+      state.user = null;
       state.errorMessage = undefined;
     },
-    onLogin: (state, { payload }: PayloadAction<Record<string, unknown>>) => {
+    onLogin: (state, { payload }: PayloadAction<User>) => {
       state.status = AuthStatus.authenticated;
-      state.user = payload;
+      state.user = { ...payload };
+      state.errorMessage = undefined;
+    },
+    onLogout: (state, { payload }: PayloadAction<string | undefined>) => {
+      state.status = AuthStatus.notAuthenticated;
+      state.user = null;
+      state.errorMessage = payload;
+    },
+    onClearError: (state) => {
       state.errorMessage = undefined;
     }
   }
 });
 
-export const { checking } = authSlice.actions;
+export const { onChecking, onLogin, onLogout, onClearError } = authSlice.actions;
