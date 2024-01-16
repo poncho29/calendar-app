@@ -20,7 +20,7 @@ const initialRegister = {
 }
 
 export const LoginPage = () => {
-  const { errorMessage, startLogin } = useAuthStore();
+  const { errorMessage, startLogin, startRegister } = useAuthStore();
 
   useEffect(() => {
     if (errorMessage !== undefined) {
@@ -59,7 +59,11 @@ export const LoginPage = () => {
         .required('La confirmación de contraseña es obligatorio'),
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      startRegister({
+        name: values.name,
+        email: values.email,
+        password: values.password
+      });
     },
   });
 
