@@ -12,7 +12,7 @@ import { Event } from '../interfaces'
 
 export const CalendarPage = () => {
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
 
   const [lastView, setLastView] = useState<View>('week');
 
@@ -54,6 +54,11 @@ export const CalendarPage = () => {
     localStorage.setItem('lastView', view);
     setLastView(view);
   }
+
+  useEffect(() => {
+    startLoadingEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

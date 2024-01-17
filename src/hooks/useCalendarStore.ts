@@ -4,6 +4,7 @@ import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from ".
 
 import { Event } from "../calendar/interfaces";
 import calendarApi from "../api/calendarApi";
+import { convertEventsToDate } from "../helpers";
 
 export const useCalendarStore = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +40,18 @@ export const useCalendarStore = () => {
     dispatch(onDeleteEvent());
   }
 
+  const startLoadingEvents = async () => {
+    try {
+      const { data } = await calendarApi.get('/events');
+      
+      const events = convertEventsToDate(data.events);
+      console.log(events);
+    } catch (error) {
+      console.log('Error cargando eventos');
+      console.log(error);
+    }
+  }
+
   return {
     // Properties
     events,
@@ -48,6 +61,7 @@ export const useCalendarStore = () => {
     // Methods
     setActiveEvent,
     startSavingEvent,
-    startDeletingEvent
+    startDeletingEvent,
+    startLoadingEvents,
   }
 };
