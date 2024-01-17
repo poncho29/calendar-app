@@ -5,7 +5,7 @@ export interface User {
 
 export interface AuthState {
   status: string;
-  user: User | null,
+  user: User | undefined,
   errorMessage: string | undefined,
 }
 
