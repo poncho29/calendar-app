@@ -1,10 +1,13 @@
+import calendarApi from "../api/calendarApi";
+
 import { useAppDispatch, useAppSelector } from "."
 
-import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store";
+import { onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent, onUpdateEvent } from "../store";
+
+import { convertEventsToDate } from "../helpers";
 
 import { Event } from "../calendar/interfaces";
-import calendarApi from "../api/calendarApi";
-import { convertEventsToDate } from "../helpers";
+import Swal from "sweetalert2";
 
 export const useCalendarStore = () => {
   const dispatch = useAppDispatch();
@@ -16,21 +19,23 @@ export const useCalendarStore = () => {
   }
 
   const startSavingEvent = async (event: Event) => {
-    // TODO: Llegar al backend
-
-    if(event._id) {
-      dispatch(onUpdateEvent({ ...event }));
-    } else {
-      const { data } = await calendarApi.post('/events', event);
-
-      if (user && Object.keys(user).length) {
-        const owner = {
-          _id: user.uid,
-          name: user.name
-        }
+    try {
+      if(event.id) {
+        await calendarApi.put(`/events/${event.id}`, event);
   
-        dispatch(onAddNewEvent({ ...event, _id: data.event.id, user: owner }));
+        dispatch(onUpdateEvent({ ...event, user }));
+      } else {
+        const { data } = await calendarApi.post('/events', event);
+  
+        if (user && Object.keys(user).length) {
+          const owner = { ...user }
+    
+          dispatch(onAddNewEvent({ ...event, id: data.event.id, user: owner }));
+        }
       }
+    } catch (error: any) {
+      console.log(error);
+      Swal.fire('Error al guardar', error?.response?.data?.msg || 'Error', 'error');
     }
   }
 
@@ -43,9 +48,8 @@ export const useCalendarStore = () => {
   const startLoadingEvents = async () => {
     try {
       const { data } = await calendarApi.get('/events');
-      
       const events = convertEventsToDate(data.events);
-      console.log(events);
+      dispatch(onLoadEvents(events));
     } catch (error) {
       console.log('Error cargando eventos');
       console.log(error);

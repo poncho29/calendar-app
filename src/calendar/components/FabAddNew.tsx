@@ -8,12 +8,12 @@ export const FabAddNew = () => {
   const handleNewEvent = () => {
     setActiveEvent({
       title: '',
-      notas: '',
+      notes: '',
       start: new Date(),
       end: addHours(new Date(), 2),
       bgColor: '#fafafa',
       user: {
-        _id: '',
+        uid: '',
         name: ''
       }
     })

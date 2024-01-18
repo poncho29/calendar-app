@@ -1,12 +1,11 @@
+import { User } from "../../interfaces";
+
 export interface Event {
-  _id?: string;
+  id?: string;
   title: string;
-  notas: string;
+  notes: string;
   start: Date;
   end: Date;
   bgColor?: string;
-  user?: {
-      _id: string;
-      name: string;
-  }
+  user: User | undefined;
 }

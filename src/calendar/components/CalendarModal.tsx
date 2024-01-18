@@ -39,9 +39,10 @@ export const CalendarModal = () => {
 
   const [formValues, setFormValues] = useState<Event>({
     title: '',
-    notas: '',
+    notes: '',
     start: new Date(),
-    end: addHours(new Date(), 2)
+    end: addHours(new Date(), 2),
+    user: undefined,
   });
 
   const titleClass = useMemo(() => {
@@ -81,8 +82,6 @@ export const CalendarModal = () => {
     }
 
     if (formValues.title.length <= 0) return;
-
-    console.log(formValues);
 
     await startSavingEvent(formValues);
     closeDateModal();
@@ -146,10 +145,10 @@ export const CalendarModal = () => {
         <div className="form-group mb-2">
           <textarea
             rows={5}
-            name="notas"
+            name="notes"
             placeholder="Notas"
             className="form-control"
-            value={formValues.notas}
+            value={formValues.notes}
             onChange={onInputChange}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">Información adicional</small>
